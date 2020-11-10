@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: sa
+    password: lan@2mail
+    url: jdbc:sqlserver://192.168.0.8:1433;DatabaseName=MES
+
+logging:
+  level:
+    net.stopno.xingda.demo: debug
