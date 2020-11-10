@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -7,6 +7,17 @@ spring:
     username: sa
     password: lan@2mail
     url: jdbc:sqlserver://192.168.0.8:1433;DatabaseName=MES
+    # thymeleaf 相关设置
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    servlet:
+      content-type: text/html
+    cache: false
+    check-template: true
 
 logging:
   level:
