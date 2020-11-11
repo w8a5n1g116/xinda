@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计划列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+    <script src="/assets/js/jquery-3.5.1.min.js"></script>
+    <script src="/assets/js/jquery.cookie.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col bg-dark">
+            <div class="input-group mt-2 mb-2">
+                <input type="text" class="form-control bg-light" placeholder="输入批号" id="LotSN" />
+                <div class="input-group-append">
+                    <a class="btn text-white" id="ScanBtn"><i class="fa fa-qrcode"></i></a>
+                    <button class="btn text-white" id="ScanBtn2">查询</button>
+                    <a class="btn text-white" href="#menu" data-toggle="collapse"><i class="fa fa-bars"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+            <div class="mt-2" id="planListDiv">
+                <ul class="list-group">
+                    <li class="list-group-item">铸件号:<b>123456</b></li>
+                    <li class="list-group-item">产品名称:123456</li>
+                    <li class="list-group-item">工序名称:123456</li>
+                    <li class="list-group-item">入库时间:123456</li>
+                    <li class="list-group-item">顾客名称:123456</li>
+                    <li class="list-group-item">计划时间:123456</li>
+                    <li class="list-group-item">
+                            <button class="btn btn-info btn-block">报工</button>
+                            <button class="btn btn-info btn-block">质检</button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    var userName = $.cookie('userName');
+
+    $(document).ready(function(){
+        getPlanList();
+    });
+
+    function getPlanList(){
+        $('#planListDiv').html('');
+
+        $.get('/getPlan?userCode=' + userName,function(ret){
+            var inlinehtml = '';
+            var json = JSON.parse(ret);
+            $.each(json,function(index,value){
+                inlinehtml += '<ul class="list-group mt-2">\n' +
+                    '                    <li class="list-group-item">生产单号:<b>' + value.ScOrder_Code + '</b></li>\n' +
+                    '                    <li class="list-group-item">产品名称:' + value.ProductName + '</li>\n' +
+                    '                    <li class="list-group-item">工序名称:' + value.Gx_Name + '</li>\n' +
+                    '                    <li class="list-group-item">入库时间:' + value.ProductName + '</li>\n' +
+                    '                    <li class="list-group-item">顾客名称:' + value.CustomerName + '</li>\n' +
+                    '                    <li class="list-group-item">计划时间:' + value.JhDate + '</li>\n' +
+                    '                    <li class="list-group-item">\n' +
+                    '                            <button class="btn btn-info btn-block">报工</button>\n' +
+                    '                            <button class="btn btn-info btn-block">质检</button>\n' +
+                    '                    </li>\n' +
+                    '                </ul>';
+            });
+
+            $('#planListDiv').html(inlinehtml);
+        })
+    }
+</script>
+</html>
