@@ -22,4 +22,11 @@ public class BaseService implements IBaseService {
     public List<Map<String, Object>> getParam(String userCode, String productId, String orderNo, String processName, String paramName, String queryType) {
         return baseMapper.getParam(userCode,productId,orderNo,processName,paramName,queryType);
     }
+
+    @Override
+    public Map<String,Object> getUser(String userName,String passwordMD5) {
+        Map<String,Object> user = baseMapper.getUserByUserNameAndPassword(userName,passwordMD5);
+        return user;
+
+    }
 }
