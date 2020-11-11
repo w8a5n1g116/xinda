@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -39,6 +40,24 @@ public class BaseController  {
         return "paramList";
     }
 
+    @RequestMapping("/checkParam")
+    public ModelAndView checkParam(String scOrderCode,String userCode,String productName,String processName,String paramName,String productId){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("checkParam");
+        String queryType = "条件筛选";
+        List<Map<String,Object>> params = iBaseService.getParam(userCode,productName,scOrderCode,processName,paramName,queryType);
+        Map<String,Object> param = params.get(0);
+        if(param.size() != 0){
+            mv.addObject("paramModel",param);
+        }
+        List<String> unqualifiedTypeList = iBaseService.getUnqualifiedType();
+        mv.addObject("unqualifiedTypeList",unqualifiedTypeList);
+        List<String> fxRouteList = iBaseService.getFXRoute(productId);
+        mv.addObject("fxRouteList",fxRouteList);
+
+        return mv;
+    }
+
 
 
     @RequestMapping(value = "/loginPost",method = RequestMethod.POST)
@@ -62,10 +81,34 @@ public class BaseController  {
     public String getParam(String userCode, String productId, String orderNo, String processName, String paramName){
         String queryType = "条件筛选";
         if(productId == null)   productId = "";
-        if(orderNo == null)   orderNo = "";
+        if(orderNo == null)   orderNo = "SCH";
         if(processName == null)   processName = "";
         if(paramName == null)   paramName = "";
         List<Map<String,Object>> param = iBaseService.getParam(userCode,productId,orderNo,processName,paramName,queryType);
         return JSON.toJSONString(param);
     }
+
+    @RequestMapping(value = "/setReportable")
+    @ResponseBody
+    public String setReportable(String scOrderCode, String gxCode){
+
+            int ret = iBaseService.setReportable(scOrderCode, gxCode);
+            if(ret != 0)
+                return JSON.toJSONString(true);
+            else
+                return JSON.toJSONString(false);
+    }
+
+    @RequestMapping(value = "/report")
+    @ResponseBody
+    public String report(String scOrderCode, String gxCode,String userCode){
+        try{
+            int ret = iBaseService.report(scOrderCode, gxCode, userCode);
+            return JSON.toJSONString(true);
+        }catch (Exception e){
+            return JSON.toJSONString(false);
+        }
+    }
+
+
 }

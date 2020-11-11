@@ -29,4 +29,24 @@ public class BaseService implements IBaseService {
         return user;
 
     }
+
+    @Override
+    public int report(String scOrderCode, String gxCode, String userCode) {
+        return baseMapper.report(scOrderCode, gxCode, userCode);
+    }
+
+    @Override
+    public int setReportable(String scOrderCode, String gxCode) {
+        return baseMapper.setReportable(scOrderCode, gxCode);
+    }
+
+    @Override
+    public List<String> getUnqualifiedType() {
+        return baseMapper.getUnqualifiedType();
+    }
+
+    @Override
+    public List<String> getFXRoute(String productId) {
+        return baseMapper.getFXRoute(productId);
+    }
 }

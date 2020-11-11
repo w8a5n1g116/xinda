@@ -18,6 +18,24 @@ public interface BaseMapper {
     @SelectProvider(method = "getPlanByUserCode",type = BaseMapperProvider.class)
     List<Map<String,Object>> getPlan(String userCode);
 
+    @Select("exec Pro_MES_ScManage_Gxhb_App "
+            +"@scdd = #{scOrderCode,mode=IN,jdbcType=VARCHAR},"
+            +"@gxdm = #{gxCode,mode=IN,jdbcType=VARCHAR},"
+            +"@hbrCode = #{userCode,mode=IN,jdbcType=VARCHAR},"
+            )
+    @Options(statementType = StatementType.CALLABLE)
+    int report(String scOrderCode, String gxCode,String userCode);
+
+    @Update("update [dbo].[Tab_MES_ScInfo_Xc_Zx] set IsReport = '是' where ScOrder_Code = #{scOrderCode} and Gx_Code = #{gxCode}")
+    int setReportable(String scOrderCode, String gxCode);
+
+    @Select("select S_Value FROM [MES].[dbo].[Tab_MES_BaseManage_Sys_Edit]  where S_Key = '质量不合类别'")
+    List<String> getUnqualifiedType();
+
+    @Select("select distinct Fx_Category from  [MES].[dbo].[Tab_MES_BaseManage_FxGxInfo] where  Cp_Category in \n" +
+            "(select top 1 Category  from [MES].[dbo].[Tab_MES_BaseManage_ProductInfo]  where Productid = #{productId})")
+    List<String> getFXRoute(String productId);
+
     @Select("exec Pro_MES_QualityManage_SelfAssessment_Lists "
             +"@用户号 = #{userCode,mode=IN,jdbcType=VARCHAR},"
             +"@产品名称 = #{productId,mode=IN,jdbcType=VARCHAR},"
