@@ -14,8 +14,8 @@ public class BaseService implements IBaseService {
     private BaseMapper baseMapper;
 
     @Override
-    public List<Map<String,Object>> getPlan(String userCode){
-        return baseMapper.getPlan(userCode);
+    public List<Map<String,Object>> getPlan(String userCode,String searchString){
+        return baseMapper.getPlan(userCode,searchString);
     }
 
     @Override

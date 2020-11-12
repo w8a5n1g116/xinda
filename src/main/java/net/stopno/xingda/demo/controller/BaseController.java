@@ -71,8 +71,8 @@ public class BaseController  {
 
     @RequestMapping(value = "/getPlan")
     @ResponseBody
-    public String getPlan(String userCode){
-        List<Map<String,Object>> plan = iBaseService.getPlan(userCode);
+    public String getPlan(String userCode,String searchString){
+        List<Map<String,Object>> plan = iBaseService.getPlan(userCode,searchString);
         return JSON.toJSONString(plan);
     }
 
@@ -80,10 +80,10 @@ public class BaseController  {
     @ResponseBody
     public String getParam(String userCode, String productId, String orderNo, String processName, String paramName){
         String queryType = "条件筛选";
-        if(productId == null)   productId = "";
-        if(orderNo == null)   orderNo = "SCH";
-        if(processName == null)   processName = "";
-        if(paramName == null)   paramName = "";
+        if(productId == null) {  productId = ""; }
+        if(orderNo == null) {  orderNo = "SCH"; }
+        if(processName == null) {  processName = ""; }
+        if(paramName == null) {  paramName = ""; }
         List<Map<String,Object>> param = iBaseService.getParam(userCode,productId,orderNo,processName,paramName,queryType);
         return JSON.toJSONString(param);
     }
@@ -93,10 +93,11 @@ public class BaseController  {
     public String setReportable(String scOrderCode, String gxCode){
 
             int ret = iBaseService.setReportable(scOrderCode, gxCode);
-            if(ret != 0)
+            if(ret != 0){
                 return JSON.toJSONString(true);
-            else
+            }else{
                 return JSON.toJSONString(false);
+            }
     }
 
     @RequestMapping(value = "/report")

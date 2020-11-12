@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
-    password: lan@2mail
-    url: jdbc:sqlserver://192.168.0.8:1433;DatabaseName=MES
+    password: 123456789
+    url: jdbc:sqlserver://192.168.100.209:1433;DatabaseName=MES
     # thymeleaf 相关设置
   thymeleaf:
     prefix: classpath:/templates/

@@ -47,7 +47,7 @@
         $('#password').val(password);
 
         if(userName != null && userName != undefined && password != null && password != undefined ){
-            submitForm();
+            //submitForm();
         }
     });
 
@@ -59,7 +59,7 @@
                 var json = JSON.parse(ret);
                 $.cookie('userName',json.UserCode)
                 $.cookie('password',password);
-                if(json.Flag == '1'){
+                if(json.Flag == '是'){
                     window.location='/paramList';
                 }else{
                     window.location='/planList';

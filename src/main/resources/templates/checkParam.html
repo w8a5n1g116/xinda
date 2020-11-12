@@ -17,11 +17,8 @@
     <div class="row">
         <div class="col bg-dark">
             <div class="input-group mt-2 mb-2">
-                <input type="text" class="form-control bg-light" placeholder="输入批号" id="LotSN" />
                 <div class="input-group-append">
-                    <a class="btn text-white" id="ScanBtn"><i class="fa fa-qrcode"></i></a>
-                    <button class="btn text-white" id="ScanBtn2">查询</button>
-                    <a class="btn text-white" href="#menu" data-toggle="collapse"><i class="fa fa-bars"></i></a>
+                    <button class="btn text-white" id="ScanBtn2">质量检查</button>
                 </div>
             </div>
         </div>
@@ -77,9 +74,11 @@
     </div>
 </div>
 </body>
-<script>
+<script th:inline="javascript">
 
     var userName = $.cookie('userName');
+    var scorderCcode = [[${paramModel['ScOrder_Code']}]];
+    var gxCode = [[${paramModel['Gx_Code']}]];
 
     $(document).ready(function(){
         $('#selfeval').blur(function () {
@@ -124,21 +123,27 @@
                                 return;
                             }
                         }
-                    }
-                    $.post('/setReportable',{scOrderCode:scorderCcode,gxCode:gxCode},function(ret){
-                        var json = JSON.parse(ret);
-                        if(json == true){
-                            swal("您已质量汇报成功！", {
-                                icon: "success",
-                            });
-                            window.location = '/paramList';
-                        }else{
-                            swal("质量汇报失败，请稍后再试！", {
-                                icon: "error",
-                            });
-                        }
 
-                    });
+                        swal("暂时不支持不合格质量汇报！");
+                        return;
+                    }
+                    if(result === '合格'){
+                        $.post('/report',{scOrderCode:scorderCcode,gxCode:gxCode,userCode:userName},function(ret){
+                            var json = JSON.parse(ret);
+                            if(json == true){
+                                swal("您已质量汇报成功！", {
+                                    icon: "success",
+                                });
+                                window.location = '/paramList';
+                            }else{
+                                swal("质量汇报失败，请稍后再试！", {
+                                    icon: "error",
+                                });
+                            }
+
+                        });
+                    }
+
 
                 }else{
                     swal("您已取消质量汇报！");

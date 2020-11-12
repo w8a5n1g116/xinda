@@ -17,11 +17,10 @@
     <div class="row">
         <div class="col bg-dark">
             <div class="input-group mt-2 mb-2">
-                <input type="text" class="form-control bg-light" placeholder="输入批号" id="LotSN" />
+                <input type="text" class="form-control bg-light" placeholder="生产单号" id="SearchString" />
                 <div class="input-group-append">
                     <a class="btn text-white" id="ScanBtn"><i class="fa fa-qrcode"></i></a>
-                    <button class="btn text-white" id="ScanBtn2">查询</button>
-                    <a class="btn text-white" href="#menu" data-toggle="collapse"><i class="fa fa-bars"></i></a>
+                    <button class="btn text-white" id="Search">查询</button>
                 </div>
             </div>
         </div>
@@ -53,12 +52,17 @@
 
     $(document).ready(function(){
         getParamList();
+
+        $('#Search').click(function () {
+            getParamList();
+        })
     });
 
     function getParamList(){
         $('#planListDiv').html('');
+        var searchString = $('#SearchString').val();
 
-        $.get('/getParam?userCode=' + userName,function(ret){
+        $.get('/getParam?userCode=' + userName + '&orderNo=' + searchString,function(ret){
             var inlinehtml = '';
             var json = JSON.parse(ret);
             //alert(ret);

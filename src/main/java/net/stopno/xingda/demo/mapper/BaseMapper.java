@@ -1,5 +1,6 @@
 package net.stopno.xingda.demo.mapper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.StatementType;
@@ -16,12 +17,12 @@ public interface BaseMapper {
     Map<String,Object> getUserByUserNameAndPassword(String userName,String password);
 
     @SelectProvider(method = "getPlanByUserCode",type = BaseMapperProvider.class)
-    List<Map<String,Object>> getPlan(String userCode);
+    List<Map<String,Object>> getPlan(String userCode,String searchString);
 
     @Select("exec Pro_MES_ScManage_Gxhb_App "
             +"@scdd = #{scOrderCode,mode=IN,jdbcType=VARCHAR},"
             +"@gxdm = #{gxCode,mode=IN,jdbcType=VARCHAR},"
-            +"@hbrCode = #{userCode,mode=IN,jdbcType=VARCHAR},"
+            +"@hbrCode = #{userCode,mode=IN,jdbcType=VARCHAR}"
             )
     @Options(statementType = StatementType.CALLABLE)
     int report(String scOrderCode, String gxCode,String userCode);
@@ -48,13 +49,17 @@ public interface BaseMapper {
     List<Map<String,Object>> getParam(String userCode,String productId,String orderNo,String processName,String paramName,String queryType);
 
     class BaseMapperProvider{
-        public String getPlanByUserCode(String userCode){
+        public String getPlanByUserCode(String userCode,String searchString){
             String sql = "";
             if(userCode.equals("system")){
                 sql = "select  *  from [MES].[dbo].[View_Mes_ScInfo_Gxhb_List] where 1=1  and IsReport is NULL ";
             }else{
-                sql = "select  *  from [MES].[dbo].[View_Mes_ScInfo_Gxhb_List] where  Gx_Name in (select distinct gx_Name from Tab_MES_BaseManage_Gx_User  where UserCode='" + userCode + "' ) and IsReport is NULL";
+                sql = "select  *  from [MES].[dbo].[View_Mes_ScInfo_Gxhb_List] where  Gx_Name in (select distinct gx_Name from Tab_MES_BaseManage_Gx_User  where UserCode='" + userCode + "' ) and IsReport is NULL ";
             }
+            if(StringUtils.isNotEmpty(searchString)){
+                sql += " and (JH like '%" + searchString + "%' or ScOrder_Code like '%" + searchString + "%' or Productid like '%" + searchString + "%' or ProductName like '%" + searchString + "%')";
+            }
+            sql += " order by JH desc";
             return sql;
         }
     }

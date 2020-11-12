@@ -17,11 +17,10 @@
     <div class="row">
         <div class="col bg-dark">
             <div class="input-group mt-2 mb-2">
-                <input type="text" class="form-control bg-light" placeholder="输入批号" id="LotSN" />
+                <input type="text" class="form-control bg-light" placeholder="铸件号,生产单号,产品代码,产品名称" id="SearchString" />
                 <div class="input-group-append">
                     <a class="btn text-white" id="ScanBtn"><i class="fa fa-qrcode"></i></a>
-                    <button class="btn text-white" id="ScanBtn2">查询</button>
-                    <a class="btn text-white" href="#menu" data-toggle="collapse"><i class="fa fa-bars"></i></a>
+                    <button class="btn text-white" id="Search">查询</button>
                 </div>
             </div>
         </div>
@@ -54,17 +53,23 @@
 
     $(document).ready(function(){
         getPlanList();
+
+        $('#Search').click(function () {
+            getPlanList();
+        })
     });
 
     function getPlanList(){
         $('#planListDiv').html('');
+        var searchString = $('#SearchString').val();
 
-        $.get('/getPlan?userCode=' + userName,function(ret){
+        $.get('/getPlan?userCode=' + userName +'&searchString='+searchString,function(ret){
             var inlinehtml = '';
             var json = JSON.parse(ret);
             $.each(json,function(index,value){
                 inlinehtml += '<ul class="list-group mt-2">\n' +
                     '                    <li class="list-group-item">生产单号:<b>' + value.ScOrder_Code + '</b></li>\n' +
+                    '                    <li class="list-group-item">铸件号:<b>' + (value.JH != undefined ? value.JH : '') + '</b></li>\n' +
                     '                    <li class="list-group-item">产品名称:' + value.ProductName + '</li>\n' +
                     '                    <li class="list-group-item">工序名称:' + value.Gx_Name + '</li>\n' +
                     '                    <li class="list-group-item">入库时间:' + value.ProductName + '</li>\n' +
