@@ -79,6 +79,9 @@
     var userName = $.cookie('userName');
     var scorderCcode = [[${paramModel['ScOrder_Code']}]];
     var gxCode = [[${paramModel['Gx_Code']}]];
+    var fxbz = [[${paramModel['FxBz']}]];
+    var forder = [[${paramModel['Forder']}]];
+    var id = [[${paramModel['Id']}]];
 
     $(document).ready(function(){
         $('#selfeval').blur(function () {
@@ -103,48 +106,42 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    if(result === '不合格'){
-                        var self = $('#self').val();
-                        var unqualifiedType = $('#unqualifiedType').val();
+                    var self = $('#self').val();
+                    var unqualifiedType = $('#unqualifiedType').val();
+                    var selfeval = $('#selfeval').val();
 
-                        if(unqualifiedType === ''){
-                            swal("请选择不和类型！");
-                            return;
-                        }
-                        if(self === ''){
-                            swal("请选择自评结果！");
-                            return;
-                        }
-
-                        if(self === '返修'){
-                            var fxroute = $('#fxroute').val();
-                            if(fxroute === ''){
-                                swal("请选择返修模板！");
-                                return;
-                            }
-                        }
-
-                        swal("暂时不支持不合格质量汇报！");
+                    if(unqualifiedType === ''){
+                        swal("请选择不和类型！");
                         return;
                     }
-                    if(result === '合格'){
-                        $.post('/report',{scOrderCode:scorderCcode,gxCode:gxCode,userCode:userName},function(ret){
-                            var json = JSON.parse(ret);
-                            if(json == true){
-                                swal("您已质量汇报成功！", {
-                                    icon: "success",
-                                });
-                                window.location = '/paramList';
-                            }else{
-                                swal("质量汇报失败，请稍后再试！", {
-                                    icon: "error",
-                                });
-                            }
-
-                        });
+                    if(self === ''){
+                        swal("请选择自评结果！");
+                        return;
                     }
 
+                    if(self === '返修'){
+                        var fxroute = $('#fxroute').val();
+                        if(fxroute === ''){
+                            swal("请选择返修模板！");
+                            return;
+                        }
+                    }
 
+                    $.post('/report',{scOrderCode:scorderCcode,selfEval:selfeval,gxCode:gxCode,submitUserCode:userName,selfSpRe:self,notType:unqualifiedType,id:id,fxbz:fxbz,forder:forder,result:result},function(ret){
+                        var json = JSON.parse(ret);
+                        if(json == true){
+                            swal("您已质量汇报成功！", {
+                                icon: "success",
+                            });
+                            window.location = '/paramList';
+                        }else{
+                            swal("质量汇报失败，请稍后再试！", {
+                                icon: "error",
+                            });
+                        }
+
+                    });
+                    return;
                 }else{
                     swal("您已取消质量汇报！");
                 }
