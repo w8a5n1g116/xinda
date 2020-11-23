@@ -109,25 +109,28 @@
                     var self = $('#self').val();
                     var unqualifiedType = $('#unqualifiedType').val();
                     var selfeval = $('#selfeval').val();
-
-                    if(unqualifiedType === ''){
-                        swal("请选择不和类型！");
-                        return;
-                    }
-                    if(self === ''){
-                        swal("请选择自评结果！");
-                        return;
-                    }
-
-                    if(self === '返修'){
-                        var fxroute = $('#fxroute').val();
-                        if(fxroute === ''){
-                            swal("请选择返修模板！");
+                    var fxroute = $('#fxroute').val();
+                    if(result === '不合格'){
+                        if(unqualifiedType === ''){
+                            swal("请选择不和类型！");
                             return;
+                        }
+                        if(self === ''){
+                            swal("请选择自评结果！");
+                            return;
+                        }
+
+                        if(self === '返修'){
+                            if(fxroute === ''){
+                                swal("请选择返修模板！");
+                                return;
+                            }
                         }
                     }
 
-                    $.post('/report',{scOrderCode:scorderCcode,selfEval:selfeval,gxCode:gxCode,submitUserCode:userName,selfSpRe:self,notType:unqualifiedType,id:id,fxbz:fxbz,forder:forder,result:result},function(ret){
+
+
+                    $.post('/report',{scOrderCode:scorderCcode,selfEval:selfeval,gxCode:gxCode,submitUserCode:userName,selfSpRe:self,notType:unqualifiedType,id:id,fxbz:fxbz,forder:forder,result:result, fixModel:fxroute},function(ret){
                         var json = JSON.parse(ret);
                         if(json == true){
                             swal("您已质量汇报成功！", {
